@@ -1,46 +1,6 @@
 'use client'
 
-import { IFriendItems } from '@/types/items.interface'
 import FriendItems from './_components/friend-items'
-
-const data: IFriendItems[] = [
-	{
-		id: '1',
-		friendId: 1,
-		label: 'Jhon Doe',
-		price: '+50000',
-	},
-	{
-		id: '2',
-		friendId: 1,
-		label: 'Julian Doe',
-		price: '+50000',
-	},
-	{
-		id: '3',
-		friendId: 1,
-		label: 'Tyler Smith',
-		price: '+50000',
-	},
-	{
-		id: '4',
-		friendId: 1,
-		label: 'Diana Smith',
-		price: '+50000',
-	},
-	{
-		id: '5',
-		friendId: 1,
-		label: 'Diana Smith',
-		price: '+50000',
-	},
-	{
-		id: '6',
-		friendId: 1,
-		label: 'Diana Smith',
-		price: '+50000',
-	},
-]
 
 const FriendsPage = () => {
 	return (
@@ -52,7 +12,7 @@ const FriendsPage = () => {
 				</h3>
 			</div>
 			<p className='text-2xl font-semibold'>List of your friends</p>
-			<FriendItems items={data} />
+			<FriendItems />
 		</div>
 	)
 }

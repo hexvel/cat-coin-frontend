@@ -1,7 +1,9 @@
 'use client'
 
 import ProgressBar from '@/components/progress-bar'
-import { useGetUserQuery, useUpdateUserMutation } from '@/store/api/user'
+import { RootState } from '@/store'
+import { useTypedDispatch, useTypedSelector } from '@/store/hooks/typedHooks'
+import { setupWebSocket, updateUser } from '@/store/slice/websocketSlice'
 import {
 	useHapticFeedback,
 	useWebApp,
@@ -19,16 +21,24 @@ interface PlusOne {
 
 const UserProfile = () => {
 	const webApp = useWebApp()
-	const [progress, setProgress] = useState<number>(6000)
+	const dispatch = useTypedDispatch()
 	const [plusOnes, setPlusOnes] = useState<PlusOne[]>([])
 	const [_, __, selectionChanged] = useHapticFeedback()
 	const [isWebAppReady, setIsWebAppReady] = useState<boolean>(false)
-	const [clicksCount, setClicksCount] = useState<number>(0)
-	const [updateUser] = useUpdateUserMutation()
+
+	const { user, progress, clicksCount } = useTypedSelector(
+		(state: RootState) => state.websocket
+	)
 
 	const handleProgress = (event: MouseEvent<HTMLImageElement>) => {
-		setProgress(prev => prev - 1)
-		setClicksCount(prev => prev + 1)
+		if (user) {
+			dispatch(
+				updateUser({
+					energy: user.energy - 1,
+					balance: user.balance + 1,
+				})
+			)
+		}
 
 		selectionChanged()
 		showPlusOneText(event)
@@ -37,35 +47,14 @@ const UserProfile = () => {
 	useEffect(() => {
 		if (webApp) {
 			setIsWebAppReady(true)
+			dispatch(setupWebSocket(webApp.initDataUnsafe.user.id))
 		}
-	}, [webApp])
-
-	const { data } = useGetUserQuery(webApp?.initDataUnsafe.user.id, {
-		skip: !isWebAppReady,
-	})
+	}, [webApp, dispatch])
 
 	useEffect(() => {
-		if (data) {
-			setProgress(data.energy)
-			setClicksCount(data.balance)
-		}
-	}, [data])
-
-	useEffect(() => {
-		const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-			if (data) {
+		const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+			if (user) {
 				event.preventDefault()
-
-				try {
-					await updateUser({
-						telegram_id: data.telegram_id,
-						energy: progress,
-						balance: clicksCount,
-						friends: data.friends,
-					})
-				} catch (error) {
-					console.error('Failed to update user data on app close', error)
-				}
 			}
 		}
 
@@ -74,7 +63,7 @@ const UserProfile = () => {
 		return () => {
 			window.removeEventListener('beforeunload', handleBeforeUnload)
 		}
-	}, [data, progress, clicksCount, webApp])
+	}, [user])
 
 	const showPlusOneText = (event: MouseEvent<HTMLImageElement>) => {
 		const rect = event.currentTarget.getBoundingClientRect()

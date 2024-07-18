@@ -12,7 +12,7 @@ export default function Header() {
 
 	const handleCopyRef = () => {
 		navigator.clipboard.writeText(
-			`https://t.me/quantum_hexvel_bot?start=${webApp.initDataUnsafe.user.id}`
+			`https://t.me/meowcatcoinbot?start=${webApp.initDataUnsafe.user.id}`
 		)
 		toast.info('Link copied!')
 	}

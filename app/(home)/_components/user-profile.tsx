@@ -7,7 +7,7 @@ import {
 	useWebApp,
 } from '@vkruglikov/react-telegram-web-app'
 import Image from 'next/image'
-import { MouseEvent, useEffect, useState } from 'react'
+import { MouseEvent, useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import styles from '../home.module.css'
 
@@ -21,17 +21,41 @@ const UserProfile = () => {
 	const webApp = useWebApp()
 	const [progress, setProgress] = useState<number>(6000)
 	const [plusOnes, setPlusOnes] = useState<PlusOne[]>([])
-	const [_, __, selectionChanged] = useHapticFeedback()
+	const [impactChanged, _, __] = useHapticFeedback()
 	const [isWebAppReady, setIsWebAppReady] = useState<boolean>(false)
 	const [clicksCount, setClicksCount] = useState<number>(0)
 	const [updateUser] = useUpdateUserMutation()
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
 	const handleProgress = (event: MouseEvent<HTMLImageElement>) => {
 		setProgress(prev => prev - 1)
 		setClicksCount(prev => prev + 1)
 
-		selectionChanged()
+		impactChanged('medium')
 		showPlusOneText(event)
+
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current)
+		}
+
+		timeoutRef.current = setTimeout(() => {
+			updateUserData()
+		}, 500)
+	}
+
+	const updateUserData = async () => {
+		if (data) {
+			try {
+				await updateUser({
+					telegram_id: data.telegram_id,
+					energy: progress,
+					balance: clicksCount + 1,
+					friends: data.friends,
+				})
+			} catch (error) {
+				console.error('Failed to update user data', error)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -50,31 +74,6 @@ const UserProfile = () => {
 			setClicksCount(data.balance)
 		}
 	}, [data])
-
-	useEffect(() => {
-		const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
-			if (data) {
-				event.preventDefault()
-
-				try {
-					await updateUser({
-						telegram_id: data.telegram_id,
-						energy: progress,
-						balance: clicksCount,
-						friends: data.friends,
-					})
-				} catch (error) {
-					console.error('Failed to update user data on app close', error)
-				}
-			}
-		}
-
-		window.addEventListener('beforeunload', handleBeforeUnload)
-
-		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload)
-		}
-	}, [data, progress, clicksCount, webApp])
 
 	const showPlusOneText = (event: MouseEvent<HTMLImageElement>) => {
 		const rect = event.currentTarget.getBoundingClientRect()

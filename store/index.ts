@@ -6,11 +6,9 @@ import {
 } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { userApi } from './api/user'
-import { reducer as websocketSliceReducer } from './slice/websocketSlice'
 
 const reducers = combineReducers({
 	[userApi.reducerPath]: userApi.reducer,
-	websocket: websocketSliceReducer,
 })
 
 export const store = configureStore({

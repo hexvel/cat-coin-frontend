@@ -1,9 +1,7 @@
 'use client'
 
 import ProgressBar from '@/components/progress-bar'
-import { RootState } from '@/store'
-import { useTypedDispatch, useTypedSelector } from '@/store/hooks/typedHooks'
-import { setupWebSocket, updateUser } from '@/store/slice/websocketSlice'
+import { useUpdateUserMutation } from '@/store/api/user'
 import {
 	useHapticFeedback,
 	useWebApp,
@@ -21,24 +19,16 @@ interface PlusOne {
 
 const UserProfile = () => {
 	const webApp = useWebApp()
-	const dispatch = useTypedDispatch()
+	const [progress, setProgress] = useState<number>(6000)
 	const [plusOnes, setPlusOnes] = useState<PlusOne[]>([])
 	const [_, __, selectionChanged] = useHapticFeedback()
 	const [isWebAppReady, setIsWebAppReady] = useState<boolean>(false)
-
-	const { user, progress, clicksCount } = useTypedSelector(
-		(state: RootState) => state.websocket
-	)
+	const [clicksCount, setClicksCount] = useState<number>(0)
+	const [updateUser] = useUpdateUserMutation()
 
 	const handleProgress = (event: MouseEvent<HTMLImageElement>) => {
-		if (user) {
-			dispatch(
-				updateUser({
-					energy: user.energy - 1,
-					balance: user.balance + 1,
-				})
-			)
-		}
+		setProgress(prev => prev - 1)
+		setClicksCount(prev => prev + 1)
 
 		selectionChanged()
 		showPlusOneText(event)
@@ -47,23 +37,28 @@ const UserProfile = () => {
 	useEffect(() => {
 		if (webApp) {
 			setIsWebAppReady(true)
-			dispatch(setupWebSocket(webApp.initDataUnsafe.user.id))
 		}
-	}, [webApp, dispatch])
+	}, [webApp])
 
 	useEffect(() => {
-		const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-			if (user) {
-				event.preventDefault()
-			}
+		const ws = new WebSocket(
+			`ws://localhost:8000/v1/users/${webApp?.initDataUnsafe.user.id}/ws`
+		)
+
+		ws.onopen = () => {
+			console.log('WebSocket connected')
 		}
 
-		window.addEventListener('beforeunload', handleBeforeUnload)
+		ws.onmessage = event => {
+			const userData = JSON.parse(event.data)
+			setProgress(userData.energy)
+			setClicksCount(userData.balance)
+		}
 
 		return () => {
-			window.removeEventListener('beforeunload', handleBeforeUnload)
+			ws.close()
 		}
-	}, [user])
+	}, [webApp?.initDataUnsafe.user.id])
 
 	const showPlusOneText = (event: MouseEvent<HTMLImageElement>) => {
 		const rect = event.currentTarget.getBoundingClientRect()

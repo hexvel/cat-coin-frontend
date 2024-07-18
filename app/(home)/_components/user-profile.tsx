@@ -42,7 +42,7 @@ const UserProfile = () => {
 
 	useEffect(() => {
 		const ws = new WebSocket(
-			`ws://localhost:8000/v1/users/${webApp?.initDataUnsafe.user.id}/ws`
+			`ws://api.meowcatcoinbot.ru/v1/users/${webApp?.initDataUnsafe.user.id}/ws`
 		)
 
 		ws.onopen = () => {

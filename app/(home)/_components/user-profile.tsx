@@ -1,7 +1,7 @@
 'use client'
 
 import ProgressBar from '@/components/progress-bar'
-import { useUpdateUserMutation } from '@/store/api/user'
+import { useGetUserQuery, useUpdateUserMutation } from '@/store/api/user'
 import {
 	useHapticFeedback,
 	useWebApp,
@@ -40,25 +40,41 @@ const UserProfile = () => {
 		}
 	}, [webApp])
 
+	const { data } = useGetUserQuery(webApp?.initDataUnsafe.user.id, {
+		skip: !isWebAppReady,
+	})
+
 	useEffect(() => {
-		const ws = new WebSocket(
-			`ws://api.meowcatcoinbot.ru/v1/users/${webApp?.initDataUnsafe.user.id}/ws`
-		)
+		if (data) {
+			setProgress(data.energy)
+			setClicksCount(data.balance)
+		}
+	}, [data])
 
-		ws.onopen = () => {
-			console.log('WebSocket connected')
+	useEffect(() => {
+		const handleBeforeUnload = async (event: BeforeUnloadEvent) => {
+			if (data) {
+				event.preventDefault()
+
+				try {
+					await updateUser({
+						telegram_id: data.telegram_id,
+						energy: progress,
+						balance: clicksCount,
+						friends: data.friends,
+					})
+				} catch (error) {
+					console.error('Failed to update user data on app close', error)
+				}
+			}
 		}
 
-		ws.onmessage = event => {
-			const userData = JSON.parse(event.data)
-			setProgress(userData.energy)
-			setClicksCount(userData.balance)
-		}
+		window.addEventListener('beforeunload', handleBeforeUnload)
 
 		return () => {
-			ws.close()
+			window.removeEventListener('beforeunload', handleBeforeUnload)
 		}
-	}, [webApp?.initDataUnsafe.user.id])
+	}, [data, progress, clicksCount, webApp])
 
 	const showPlusOneText = (event: MouseEvent<HTMLImageElement>) => {
 		const rect = event.currentTarget.getBoundingClientRect()

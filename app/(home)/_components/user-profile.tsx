@@ -28,12 +28,28 @@ const UserProfile = () => {
   const [updateUser] = useUpdateUserMutation()
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  const showPlusOneText = (event: TouchEvent<HTMLImageElement>) => {
+    const touch = event.touches[0]
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = touch.clientX - rect.left
+    const y = touch.clientY - rect.top
+
+    console.log(x, y)
+
+    const newPlusOne: PlusOne = { id: uuidv4(), x, y }
+    setPlusOnes(prev => [...prev, newPlusOne])
+
+    setTimeout(() => {
+      setPlusOnes(prev => prev.filter(plusOne => plusOne.id !== newPlusOne.id))
+    }, 400)
+  }
+
   const handleProgress = (event: TouchEvent<HTMLImageElement>) => {
     setProgress(prev => prev - 1)
     setClicksCount(prev => prev + 1)
 
-    impactChanged('medium')
     showPlusOneText(event)
+    impactChanged('medium')
 
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
@@ -77,20 +93,6 @@ const UserProfile = () => {
     }
   }, [data])
 
-  const showPlusOneText = (event: TouchEvent<HTMLImageElement>) => {
-    const touch = event.touches[0]
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = touch.clientX - rect.left
-    const y = touch.clientY - rect.top
-
-    const newPlusOne: PlusOne = { id: uuidv4(), x, y }
-    setPlusOnes(prev => [...prev, newPlusOne])
-
-    setTimeout(() => {
-      setPlusOnes(prev => prev.filter(plusOne => plusOne.id !== newPlusOne.id))
-    }, 400)
-  }
-
   if (!data) {
     return <Loader />
   }
@@ -98,15 +100,17 @@ const UserProfile = () => {
   return (
     <>
       <p className='text-primary text-xl'>Your balance</p>
-      <h1 className='text-4xl text-white font-extrabold mb-12'>0</h1>
-      <div className='relative'>
+      <h1 className='text-4xl text-white font-extrabold mb-12'>
+        {clicksCount}
+      </h1>
+      <div className='relative w-[300px]'>
         <Image
           className='active:scale-[99%] transition-transform'
+          onTouchStart={handleProgress}
           src='/cat_coin.svg'
           alt='Cat Logo'
-          onTouchStart={handleProgress}
-          width={500}
-          height={500}
+          width={300}
+          height={300}
         />
         {plusOnes.map(plusOne => (
           <span

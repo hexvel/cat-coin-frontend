@@ -4,6 +4,10 @@
   animation: moveUp 0.8s ease-out forwards;
 }
 
+.pointerAndSelectNone {
+  user-select: none;
+}
+
 @keyframes moveUp {
   0% {
     opacity: 1;

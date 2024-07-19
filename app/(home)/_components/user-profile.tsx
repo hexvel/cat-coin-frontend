@@ -9,6 +9,7 @@ import {
 } from '@vkruglikov/react-telegram-web-app'
 import Image from 'next/image'
 import { TouchEvent, useEffect, useRef, useState } from 'react'
+import { toast } from 'sonner'
 import { v4 as uuidv4 } from 'uuid'
 import styles from '../home.module.css'
 
@@ -20,13 +21,14 @@ interface PlusOne {
 
 const UserProfile = () => {
   const webApp = useWebApp()
-  const [progress, setProgress] = useState<number>(6000)
+  const [progress, setProgress] = useState<number>(0)
   const [plusOnes, setPlusOnes] = useState<PlusOne[]>([])
   const [impactChanged, _, __] = useHapticFeedback()
   const [isWebAppReady, setIsWebAppReady] = useState<boolean>(false)
   const [clicksCount, setClicksCount] = useState<number>(0)
   const [updateUser] = useUpdateUserMutation()
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const autoUpdateRef = useRef<NodeJS.Timeout | null>(null)
 
   const showPlusOneText = (event: TouchEvent<HTMLImageElement>) => {
     const touch = event.touches[0]
@@ -45,6 +47,11 @@ const UserProfile = () => {
   }
 
   const handleProgress = (event: TouchEvent<HTMLImageElement>) => {
+    if (progress < 1) {
+      toast.warning('Limit! Energy is over')
+      return
+    }
+
     setProgress(prev => prev - 1)
     setClicksCount(prev => prev + 1)
 
@@ -57,7 +64,7 @@ const UserProfile = () => {
 
     timeoutRef.current = setTimeout(() => {
       updateUserData()
-    }, 500)
+    }, 300)
   }
 
   const updateUserData = async () => {
@@ -93,12 +100,29 @@ const UserProfile = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    if (data && isWebAppReady) {
+      autoUpdateRef.current = setInterval(async () => {
+        if (progress < 6000) {
+          setProgress(prev => prev + 3)
+          await updateUserData()
+        }
+      }, 3000)
+
+      return () => {
+        if (autoUpdateRef.current) {
+          clearInterval(autoUpdateRef.current)
+        }
+      }
+    }
+  }, [data, isWebAppReady, progress, updateUserData])
+
   if (!data) {
     return <Loader />
   }
 
   return (
-    <>
+    <div className='select-none flex flex-col items-center'>
       <p className='text-primary text-xl'>Your balance</p>
       <h1 className='text-4xl text-white font-extrabold mb-12'>
         {clicksCount}
@@ -123,7 +147,7 @@ const UserProfile = () => {
         ))}
       </div>
       <ProgressBar progress={progress} />
-    </>
+    </div>
   )
 }
 

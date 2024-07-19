@@ -6,8 +6,6 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import { useState } from 'react'
 
-import './top-items.module.css'
-
 const TopItems = () => {
   const [filter, setFilter] = useState<'day' | 'month' | 'balance'>('balance')
   const { data, isLoading } = useGetTopUsersQuery(filter)
@@ -22,7 +20,7 @@ const TopItems = () => {
         <button
           onClick={() => handleFilterChange('day')}
           className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-4 rounded-full bg-[#1E2A36]',
+            'active:scale-95 transition-transform text-xl py-2 px-6 rounded-full bg-[#1E2A36]',
             {
               '!bg-[#04F75F] text-black': filter === 'day',
             }
@@ -33,7 +31,7 @@ const TopItems = () => {
         <button
           onClick={() => handleFilterChange('month')}
           className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-4 rounded-full bg-[#1E2A36]',
+            'active:scale-95 transition-transform text-xl py-2 px-6 rounded-full bg-[#1E2A36]',
             {
               '!bg-[#04F75F] text-black': filter === 'month',
             }
@@ -44,7 +42,7 @@ const TopItems = () => {
         <button
           onClick={() => handleFilterChange('balance')}
           className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-4 rounded-full bg-[#1E2A36]',
+            'active:scale-95 transition-transform text-xl py-2 px-6 rounded-full bg-[#1E2A36]',
             {
               '!bg-[#04F75F] text-black': filter === 'balance',
             }

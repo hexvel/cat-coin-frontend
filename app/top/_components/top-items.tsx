@@ -16,7 +16,7 @@ const TopItems = () => {
 
   return (
     <div className='w-full'>
-      <div className='mb-4 flex justify-center gap-x-4'>
+      <div className='mb-4 flex justify-center gap-x-2'>
         <button
           onClick={() => handleFilterChange('day')}
           className={clsx(

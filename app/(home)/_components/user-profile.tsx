@@ -8,7 +8,13 @@ import {
   useWebApp,
 } from '@vkruglikov/react-telegram-web-app'
 import Image from 'next/image'
-import { MouseEvent, useEffect, useRef, useState } from 'react'
+import {
+  TouchEvent,
+  TouchEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import styles from '../home.module.css'
 
@@ -28,7 +34,7 @@ const UserProfile = () => {
   const [updateUser] = useUpdateUserMutation()
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const handleProgress = (event: MouseEvent<HTMLImageElement>) => {
+  const handleProgress = (event: TouchEvent<HTMLButtonElement>) => {
     setProgress(prev => prev - 1)
     setClicksCount(prev => prev + 1)
 
@@ -62,6 +68,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (webApp) {
       setIsWebAppReady(true)
+      webApp.expand()
     }
   }, [webApp])
 
@@ -76,17 +83,24 @@ const UserProfile = () => {
     }
   }, [data])
 
-  const showPlusOneText = (event: MouseEvent<HTMLImageElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect()
-    const x = event.clientX - rect.left
-    const y = event.clientY - rect.top
+  const showPlusOneText: TouchEventHandler<HTMLButtonElement> = event => {
+    const touchEvent = event as unknown as React.TouchEvent<HTMLButtonElement>
 
-    const newPlusOne: PlusOne = { id: uuidv4(), x, y }
-    setPlusOnes(prev => [...prev, newPlusOne])
+    if (touchEvent.touches.length > 0) {
+      const touch = touchEvent.touches[0]
+      const rect = touchEvent.currentTarget.getBoundingClientRect()
+      const x = touch.clientX - rect.left
+      const y = touch.clientY - rect.top
 
-    setTimeout(() => {
-      setPlusOnes(prev => prev.filter(plusOne => plusOne.id !== newPlusOne.id))
-    }, 400)
+      const newPlusOne: PlusOne = { id: uuidv4(), x, y }
+      setPlusOnes(prev => [...prev, newPlusOne])
+
+      setTimeout(() => {
+        setPlusOnes(prev =>
+          prev.filter(plusOne => plusOne.id !== newPlusOne.id)
+        )
+      }, 400)
+    }
   }
 
   if (!data) {
@@ -96,28 +110,25 @@ const UserProfile = () => {
   return (
     <>
       <p className='text-primary text-xl'>Your balance</p>
-      <h1 className='text-4xl text-white font-extrabold mb-12'>
-        {clicksCount}
-      </h1>
-      <div className='relative'>
+      <h1 className='text-4xl text-white font-extrabold mb-12'>0</h1>
+      <button onTouchStart={handleProgress} className='relative'>
         <Image
-          className='active:scale-[95%] transition-transform'
+          className='active:scale-[99%] transition-transform'
           src='/cat_coin.svg'
           alt='Cat Logo'
-          width={310}
-          height={300}
-          onClick={handleProgress}
+          width={500}
+          height={500}
         />
         {plusOnes.map(plusOne => (
           <span
             key={plusOne.id}
-            className={`${styles.plusOne} absolute text-white text-3xl font-bold`}
+            className={`${styles.plusOne} absolute text-white text-4xl font-bold`}
             style={{ top: plusOne.y, left: plusOne.x }}
           >
             +1
           </span>
         ))}
-      </div>
+      </button>
       <ProgressBar progress={progress} />
     </>
   )

@@ -1,5 +1,6 @@
 'use client'
 
+import Loader from '@/components/loader'
 import { useGetUserFriendsQuery } from '@/store/api/user'
 import { useWebApp } from '@vkruglikov/react-telegram-web-app'
 import { useEffect, useState } from 'react'
@@ -18,17 +19,13 @@ const FriendItems = () => {
     skip: !isWebApp,
   })
 
-  console.log(data)
-
-  const handleJoin = (url: string) => {
-    // window.open(url, '_blank')
-  }
-
   return (
     <div className='w-full'>
       <ul className='w-full flex flex-col gap-y-4 items-center max-h-80 overflow-y-auto'>
         {!data || !data.users ? (
-          <p>Loading...</p>
+          <Loader />
+        ) : data.users.length === 0 ? (
+          <p>No friends</p>
         ) : (
           data.users.map((item, i) => (
             <li

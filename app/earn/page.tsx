@@ -4,46 +4,28 @@ import EarnItems from './_components/earn-items'
 
 const EarnItemsData: IEarnItems[] = [
   {
-    label: 'IT Пляшка',
+    label: 'All saves bot | Скачать видео',
     price: '10 000',
     id: '1',
-    url: '',
+    url: 'https://t.me/AllSavesBot',
   },
   {
-    label: 'IT Пляшка',
+    label: 'Anime',
     price: '10 000',
     id: '2',
-    url: '',
+    url: 'https://t.me/klin0kAnime',
   },
   {
-    label: 'IT Пляшка',
+    label: 'Мультики | Сериалы | Кино',
     price: '10 000',
     id: '3',
-    url: '',
+    url: 'https://t.me/multiki_serialy_kino',
   },
   {
-    label: 'IT Пляшка',
+    label: 'Учимся вместо с хексиком',
     price: '10 000',
     id: '4',
-    url: '',
-  },
-  {
-    label: 'IT Пляшка',
-    price: '10 000',
-    id: '5',
-    url: '',
-  },
-  {
-    label: 'IT Пляшка',
-    price: '10 000',
-    id: '6',
-    url: '',
-  },
-  {
-    label: 'IT Пляшка',
-    price: '10 000',
-    id: '7',
-    url: '',
+    url: 'https://t.me/tips_from_hex',
   },
 ]
 

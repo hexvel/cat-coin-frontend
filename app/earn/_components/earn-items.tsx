@@ -5,7 +5,15 @@ import Image from 'next/image'
 
 const EarnItems = ({ items }: { items: IEarnItems[] }) => {
   const handleJoin = (url: string) => {
-    // window.open(url, '_blank')
+    window.open(url, '_blank')
+  }
+
+  const shortenText = (text: string) => {
+    if (text.length <= 20) {
+      return text
+    } else {
+      return text.slice(0, 15 - 3) + '...'
+    }
   }
 
   return (
@@ -13,7 +21,7 @@ const EarnItems = ({ items }: { items: IEarnItems[] }) => {
       <ul className='w-full flex flex-col gap-y-4 items-center max-h-80 overflow-y-auto'>
         {items.map(item => (
           <li className='w-[90%] flex items-center justify-between text-xl bg-[#12242C] pl-4 py-1 rounded-full'>
-            <p>{item.label}</p>
+            <p>{shortenText(item.label)}</p>
             <div className='flex items-center gap-x-3'>
               <span className='flex items-center gap-x-2'>
                 <Image

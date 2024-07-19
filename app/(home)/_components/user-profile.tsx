@@ -1,5 +1,6 @@
 'use client'
 
+import Loader from '@/components/loader'
 import ProgressBar from '@/components/progress-bar'
 import { useGetUserQuery, useUpdateUserMutation } from '@/store/api/user'
 import {
@@ -49,7 +50,7 @@ const UserProfile = () => {
         await updateUser({
           telegram_id: data.telegram_id,
           energy: progress,
-          balance: clicksCount + 1,
+          balance: String(clicksCount),
           friends: data.friends,
         })
       } catch (error) {
@@ -71,7 +72,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (data) {
       setProgress(data.energy)
-      setClicksCount(data.balance)
+      setClicksCount(Number(data.balance))
     }
   }, [data])
 
@@ -86,6 +87,10 @@ const UserProfile = () => {
     setTimeout(() => {
       setPlusOnes(prev => prev.filter(plusOne => plusOne.id !== newPlusOne.id))
     }, 400)
+  }
+
+  if (!data) {
+    return <Loader />
   }
 
   return (

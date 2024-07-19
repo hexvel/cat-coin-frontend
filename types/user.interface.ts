@@ -8,9 +8,18 @@ export interface IFriendResponse {
 }
 
 export interface IUser {
-  telegram_id: number
+  telegram_id: string
   full_name: string
   balance: number
+  energy: number
+  friends: IFriendResponse
+  last_update: string
+}
+
+export interface IUserUpdate {
+  telegram_id: string
+  full_name: string
+  balance: string
   energy: number
   friends: IFriendResponse
 }

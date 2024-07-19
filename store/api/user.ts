@@ -1,4 +1,9 @@
-import { IFriendResponse, IUser, IUserResponse } from '@/types/user.interface'
+import {
+  IFriendResponse,
+  IUser,
+  IUserResponse,
+  IUserUpdate,
+} from '@/types/user.interface'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const userApi = createApi({
@@ -19,7 +24,11 @@ export const userApi = createApi({
       query: id => `/users/${id}/friends`,
     }),
 
-    updateUser: builder.mutation<IUser, Partial<IUser>>({
+    getTopUsers: builder.query<IUserResponse, string>({
+      query: filterBy => `/users/top/${filterBy}`,
+    }),
+
+    updateUser: builder.mutation<IUser, Partial<IUserUpdate>>({
       query: user => ({
         url: `/users/${user.telegram_id}`,
         method: 'PUT',
@@ -34,4 +43,5 @@ export const {
   useGetUserQuery,
   useUpdateUserMutation,
   useGetUserFriendsQuery,
+  useGetTopUsersQuery,
 } = userApi

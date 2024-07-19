@@ -52,10 +52,10 @@ const TopItems = () => {
         </button>
       </div>
       <ul className='w-full flex flex-col gap-y-4 items-center max-h-80 overflow-y-auto'>
-        {isLoading ? (
+        {isLoading || !data ? (
           <Loader />
         ) : (
-          data?.users.map((item, i) => (
+          data.users.map((item, i) => (
             <li
               key={i}
               className='w-[90%] flex text-xl bg-[#12242C] px-4 py-1 rounded-full'

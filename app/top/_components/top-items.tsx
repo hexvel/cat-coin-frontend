@@ -6,6 +6,8 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import { useState } from 'react'
 
+import './top-items.module.css'
+
 const TopItems = () => {
   const [filter, setFilter] = useState<'day' | 'month' | 'balance'>('balance')
   const { data, isLoading } = useGetTopUsersQuery(filter)
@@ -15,12 +17,12 @@ const TopItems = () => {
   }
 
   return (
-    <div className='w-full'>
-      <div className='mb-4 flex justify-center gap-x-2'>
+    <div className='w-[90%] flex flex-col items-center'>
+      <div className='w-full mb-4 flex flex-wrap justify-between gap-2 md:gap-4'>
         <button
           onClick={() => handleFilterChange('day')}
           className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-8 rounded-full bg-[#1E2A36]',
+            'active:scale-95 transition-transform text-xl py-2 px-4 rounded-full bg-[#1E2A36]',
             {
               '!bg-[#04F75F] text-black': filter === 'day',
             }
@@ -31,7 +33,7 @@ const TopItems = () => {
         <button
           onClick={() => handleFilterChange('month')}
           className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-8 rounded-full bg-[#1E2A36]',
+            'active:scale-95 transition-transform text-xl py-2 px-4 rounded-full bg-[#1E2A36]',
             {
               '!bg-[#04F75F] text-black': filter === 'month',
             }
@@ -42,7 +44,7 @@ const TopItems = () => {
         <button
           onClick={() => handleFilterChange('balance')}
           className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-8 rounded-full bg-[#1E2A36]',
+            'active:scale-95 transition-transform text-xl py-2 px-4 rounded-full bg-[#1E2A36]',
             {
               '!bg-[#04F75F] text-black': filter === 'balance',
             }
@@ -58,7 +60,7 @@ const TopItems = () => {
           data.users.map((item, i) => (
             <li
               key={i}
-              className='w-[90%] flex text-xl bg-[#12242C] px-4 py-1 rounded-full'
+              className='w-full flex text-xl bg-[#12242C] px-4 py-1 rounded-full'
             >
               <div className='flex gap-x-2 items-center'>
                 <p>{i + 1}.</p>

@@ -8,13 +8,7 @@ import {
   useWebApp,
 } from '@vkruglikov/react-telegram-web-app'
 import Image from 'next/image'
-import {
-  TouchEvent,
-  TouchEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { TouchEvent, useEffect, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import styles from '../home.module.css'
 
@@ -34,7 +28,7 @@ const UserProfile = () => {
   const [updateUser] = useUpdateUserMutation()
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const handleProgress = (event: TouchEvent<HTMLButtonElement>) => {
+  const handleProgress = (event: TouchEvent<HTMLImageElement>) => {
     setProgress(prev => prev - 1)
     setClicksCount(prev => prev + 1)
 
@@ -83,24 +77,18 @@ const UserProfile = () => {
     }
   }, [data])
 
-  const showPlusOneText: TouchEventHandler<HTMLButtonElement> = event => {
-    const touchEvent = event as unknown as React.TouchEvent<HTMLButtonElement>
+  const showPlusOneText = (event: TouchEvent<HTMLImageElement>) => {
+    const touch = event.touches[0]
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = touch.clientX - rect.left
+    const y = touch.clientY - rect.top
 
-    if (touchEvent.touches.length > 0) {
-      const touch = touchEvent.touches[0]
-      const rect = touchEvent.currentTarget.getBoundingClientRect()
-      const x = touch.clientX - rect.left
-      const y = touch.clientY - rect.top
+    const newPlusOne: PlusOne = { id: uuidv4(), x, y }
+    setPlusOnes(prev => [...prev, newPlusOne])
 
-      const newPlusOne: PlusOne = { id: uuidv4(), x, y }
-      setPlusOnes(prev => [...prev, newPlusOne])
-
-      setTimeout(() => {
-        setPlusOnes(prev =>
-          prev.filter(plusOne => plusOne.id !== newPlusOne.id)
-        )
-      }, 400)
-    }
+    setTimeout(() => {
+      setPlusOnes(prev => prev.filter(plusOne => plusOne.id !== newPlusOne.id))
+    }, 400)
   }
 
   if (!data) {
@@ -111,11 +99,12 @@ const UserProfile = () => {
     <>
       <p className='text-primary text-xl'>Your balance</p>
       <h1 className='text-4xl text-white font-extrabold mb-12'>0</h1>
-      <button onTouchStart={handleProgress} className='relative'>
+      <div className='relative'>
         <Image
           className='active:scale-[99%] transition-transform'
           src='/cat_coin.svg'
           alt='Cat Logo'
+          onTouchStart={handleProgress}
           width={500}
           height={500}
         />
@@ -128,7 +117,7 @@ const UserProfile = () => {
             +1
           </span>
         ))}
-      </button>
+      </div>
       <ProgressBar progress={progress} />
     </>
   )

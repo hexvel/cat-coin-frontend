@@ -4,28 +4,28 @@ import EarnItems from './_components/earn-items'
 
 const EarnItemsData: IEarnItems[] = [
   {
-    label: 'All saves bot | Скачать видео',
+    label: 'Учимся вместо с хексиком',
     price: '10 000',
     id: '1',
+    url: 'https://t.me/tips_from_hex',
+  },
+  {
+    label: 'All saves bot | Скачать видео',
+    price: '10 000',
+    id: '2',
     url: 'https://t.me/AllSavesBot',
   },
   {
     label: 'Anime',
     price: '10 000',
-    id: '2',
+    id: '3',
     url: 'https://t.me/klin0kAnime',
   },
   {
     label: 'Мультики | Сериалы | Кино',
     price: '10 000',
-    id: '3',
-    url: 'https://t.me/multiki_serialy_kino',
-  },
-  {
-    label: 'Учимся вместо с хексиком',
-    price: '10 000',
     id: '4',
-    url: 'https://t.me/tips_from_hex',
+    url: 'https://t.me/multiki_serialy_kino',
   },
 ]
 

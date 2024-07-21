@@ -29,6 +29,7 @@ const EarnItems = ({ items }: { items: IEarnItems[] }) => {
   ) => {
     await joinChannel({ channel_id, telegram_id }).unwrap()
     webApp.openLink(url, '_blank')
+    webApp.close()
   }
 
   const shortenText = (text: string) => {

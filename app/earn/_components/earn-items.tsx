@@ -28,7 +28,7 @@ const EarnItems = ({ items }: { items: IEarnItems[] }) => {
     telegram_id: string
   ) => {
     await joinChannel({ channel_id, telegram_id }).unwrap()
-    window.open(url, '_blank')
+    webApp.openLink(url, '_blank')
   }
 
   const shortenText = (text: string) => {
@@ -67,7 +67,7 @@ const EarnItems = ({ items }: { items: IEarnItems[] }) => {
                 ) : (
                   <button
                     className='bg-[#04F75F] text-black font-bold px-10 py-4 rounded-full active:scale-95 transition-transform'
-                    onClick={() =>
+                    onTouchStart={() =>
                       handleJoin(item.url, item.channelId, userData.telegram_id)
                     }
                   >

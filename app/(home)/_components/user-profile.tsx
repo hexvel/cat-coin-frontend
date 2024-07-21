@@ -36,8 +36,6 @@ const UserProfile = () => {
     const x = touch.clientX - rect.left
     const y = touch.clientY - rect.top
 
-    console.log(x, y)
-
     const newPlusOne: PlusOne = { id: uuidv4(), x, y }
     setPlusOnes(prev => [...prev, newPlusOne])
 

@@ -2,54 +2,40 @@
 
 import Loader from '@/components/loader'
 import { useGetTopUsersQuery } from '@/store/api/user'
-import clsx from 'clsx'
 import Image from 'next/image'
 import { useState } from 'react'
+import { CustomNavButton } from './CustomNavButton'
 
 const TopItems = () => {
   const [filter, setFilter] = useState<'day' | 'month' | 'balance'>('balance')
   const { data, isLoading } = useGetTopUsersQuery(filter)
 
-  const handleFilterChange = (newFilter: 'day' | 'month' | 'balance') => {
-    setFilter(newFilter)
-  }
+  const filters = [
+    {
+      filterType: 'day',
+      title: 'День',
+    },
+    {
+      filterType: 'month',
+      title: 'Месяц',
+    },
+    {
+      filterType: 'balance',
+      title: 'Баланс',
+    },
+  ]
 
   return (
     <div className='w-[90%] flex flex-col items-center'>
       <div className='w-full mb-4 flex flex-wrap justify-between gap-2 md:gap-4'>
-        <button
-          onClick={() => handleFilterChange('day')}
-          className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-6 rounded-full bg-[#1E2A36]',
-            {
-              '!bg-[#04F75F] text-black': filter === 'day',
-            }
-          )}
-        >
-          День
-        </button>
-        <button
-          onClick={() => handleFilterChange('month')}
-          className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-6 rounded-full bg-[#1E2A36]',
-            {
-              '!bg-[#04F75F] text-black': filter === 'month',
-            }
-          )}
-        >
-          Месяц
-        </button>
-        <button
-          onClick={() => handleFilterChange('balance')}
-          className={clsx(
-            'active:scale-95 transition-transform text-xl py-2 px-6 rounded-full bg-[#1E2A36]',
-            {
-              '!bg-[#04F75F] text-black': filter === 'balance',
-            }
-          )}
-        >
-          Баланс
-        </button>
+        {filters.map((items, i) => (
+          <CustomNavButton
+            key={i}
+            {...items}
+            filter={filter}
+            setFilter={setFilter}
+          />
+        ))}
       </div>
       <ul className='w-full flex flex-col gap-y-4 items-center max-h-80 overflow-y-auto'>
         {isLoading || !data ? (

@@ -22,12 +22,12 @@ const FriendItems = () => {
   return (
     <div className='w-full'>
       <ul className='w-full flex flex-col gap-y-4 items-center max-h-80 overflow-y-auto'>
-        {!data || !data.users ? (
+        {!data ? (
           <Loader />
-        ) : data.users.length === 0 ? (
+        ) : data.length === 0 ? (
           <p>No friends</p>
         ) : (
-          data.users.map((item, i) => (
+          data.map((item, i) => (
             <li
               key={i}
               className='w-[90%] flex items-center justify-between text-xl bg-[#12242C] px-4 py-4 rounded-full'

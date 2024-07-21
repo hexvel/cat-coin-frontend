@@ -1,5 +1,5 @@
 import {
-  IFriendResponse,
+  IFriend,
   IUser,
   IUserResponse,
   IUserUpdate,
@@ -20,7 +20,7 @@ export const userApi = createApi({
       query: id => `/users/${id}`,
     }),
 
-    getUserFriends: builder.query<IFriendResponse, number>({
+    getUserFriends: builder.query<IFriend[], number>({
       query: id => `/users/${id}/friends`,
     }),
 

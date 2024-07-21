@@ -3,8 +3,14 @@ export interface IFriend {
   full_name: string
 }
 
-export interface IFriendResponse {
-  users: IFriend[]
+export interface ISubscribedChannel {
+  channel_id: number
+  reward: string
+}
+
+export interface IActionsResponse {
+  subscribed_channels: ISubscribedChannel[]
+  friends: IFriend[]
 }
 
 export interface IUser {
@@ -12,7 +18,7 @@ export interface IUser {
   full_name: string
   balance: number
   energy: number
-  friends: IFriendResponse
+  actions: IActionsResponse
   last_update: string
 }
 
@@ -21,7 +27,7 @@ export interface IUserUpdate {
   full_name: string
   balance: string
   energy: number
-  friends: IFriendResponse
+  actions: IActionsResponse
 }
 
 export interface IUserResponse {

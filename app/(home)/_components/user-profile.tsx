@@ -74,7 +74,7 @@ const UserProfile = () => {
           telegram_id: data.telegram_id,
           energy: progress,
           balance: String(clicksCount),
-          friends: data.friends,
+          actions: data.actions,
         })
       } catch (error) {
         console.error('Failed to update user data', error)

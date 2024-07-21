@@ -6,7 +6,7 @@ export interface ITopItems {
 }
 
 export interface IEarnItems {
-  id: string
+  channelId: string
   label: string
   price: string
   url: string

@@ -35,6 +35,17 @@ export const userApi = createApi({
         body: user,
       }),
     }),
+
+    joinChannel: builder.mutation<
+      void,
+      { channel_id: string; telegram_id: string }
+    >({
+      query: ({ channel_id, telegram_id }) => ({
+        url: `/users/earn/joinChannel`,
+        method: 'POST',
+        body: { channel_id, telegram_id },
+      }),
+    }),
   }),
 })
 
@@ -43,5 +54,6 @@ export const {
   useGetUserQuery,
   useUpdateUserMutation,
   useGetUserFriendsQuery,
+  useJoinChannelMutation,
   useGetTopUsersQuery,
 } = userApi

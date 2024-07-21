@@ -3,13 +3,8 @@ export interface IFriend {
   full_name: string
 }
 
-export interface ISubscribedChannel {
-  channel_id: number
-  reward: string
-}
-
 export interface IActionsResponse {
-  subscribed_channels: ISubscribedChannel[]
+  subscribed_channels: string[]
   friends: IFriend[]
 }
 

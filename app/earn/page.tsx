@@ -6,25 +6,25 @@ const EarnItemsData: IEarnItems[] = [
   {
     label: 'Учимся вместо с хексиком',
     price: '10 000',
-    id: '1',
+    channelId: '-1002100244555',
     url: 'https://t.me/tips_from_hex',
   },
   {
     label: 'All saves bot | Скачать видео',
     price: '10 000',
-    id: '2',
+    channelId: '2128560907',
     url: 'https://t.me/AllSavesBot',
   },
   {
     label: 'Anime',
     price: '10 000',
-    id: '3',
+    channelId: '-1001644293994',
     url: 'https://t.me/klin0kAnime',
   },
   {
     label: 'Мультики | Сериалы | Кино',
     price: '10 000',
-    id: '4',
+    channelId: '-1001644547920',
     url: 'https://t.me/multiki_serialy_kino',
   },
 ]
